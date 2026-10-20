@@ -24,6 +24,9 @@ section. Most real bugs come from **untrusted inputs**, **unhandled states**, an
 - [ ] Off-session charges pass `off_session: true` and handle `authentication_required`.
 - [ ] Async objects (refunds, disputes, some payment methods) are tracked by status, not
       assumed final when created.
+- [ ] Fields the SDK types as `| null` (such as `charge.balance_transaction`) are checked,
+      not hidden behind an `as` cast. A cast silences TypeScript; it doesn't make the
+      value exist.
 
 ## Retries and duplicates
 

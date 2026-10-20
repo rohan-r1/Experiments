@@ -6,6 +6,7 @@
 //                         └──────── decline ◀─────────────────────────┤
 //                                                                     └──▶ requires_action (3DS, redirects)
 //                                                                     └──▶ requires_capture (manual capture)
+import { setTimeout as sleep } from 'node:timers/promises';
 import Stripe from 'stripe';
 import { stripe } from '../../src/lib/stripe.ts';
 import { formatMoney, heading, run, show, RUN_ID } from '../../src/lib/cli.ts';
@@ -25,9 +26,9 @@ run(async () => {
     automatic_payment_methods: { enabled: true, allow_redirects: 'never' },
     metadata: { lab: '02', run: RUN_ID, order_id: 'order_1001' },
   });
-  show('created', pi, ['id', 'status', 'amount', 'client_secret']);
-  // A browser would use client_secret to confirm with Stripe.js. Treat it like a
-  // password for this one payment: don't log it or put it in URLs.
+  show('created', pi, ['id', 'status', 'amount']);
+  // pi.client_secret is what a browser would use to confirm with Stripe.js. Treat it
+  // like a password for this one payment: don't log it or put it in URLs.
 
   heading('2. Attach a test PaymentMethod');
   // pm_card_visa is a test PaymentMethod that always succeeds. In a real flow the
@@ -42,8 +43,20 @@ run(async () => {
   heading('4. Follow the money: expand Charge → BalanceTransaction');
   // expand swaps ID strings for full objects in a single request. It reaches up to
   // 4 levels deep, which saves you separate retrieve calls.
-  pi = await s.paymentIntents.retrieve(pi.id, { expand: ['latest_charge.balance_transaction'] });
-  const charge = pi.latest_charge as Stripe.Charge;
+  //
+  // charge.balance_transaction can be null right after the payment succeeds: Stripe may
+  // create the BalanceTransaction a moment later. The type says so
+  // (`string | BalanceTransaction | null`). A real app waits for the charge.updated webhook
+  // (Lab 3); this script just polls for a few seconds.
+  let charge!: Stripe.Charge;
+  for (let i = 0; i < 10; i++) {
+    pi = await s.paymentIntents.retrieve(pi.id, { expand: ['latest_charge.balance_transaction'] });
+    charge = pi.latest_charge as Stripe.Charge;
+    if (charge.balance_transaction) break;
+    console.log('balance_transaction is still null, waiting...');
+    await sleep(1000);
+  }
+  if (!charge.balance_transaction) throw new Error('balance_transaction still null after 10s; run again later');
   const bt = charge.balance_transaction as Stripe.BalanceTransaction;
   console.log({
     charge: charge.id,
