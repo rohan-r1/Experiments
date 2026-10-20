@@ -28,7 +28,9 @@ npm run lab labs/01-api-basics/04-idempotency.ts
 npm run lab labs/01-api-basics/05-cleanup.ts
 ```
 
-After each one, open Dashboard → Developers → Logs and find the requests it made.
+After each one, find its requests at https://dashboard.stripe.com/test/logs (Workbench → Logs).
+GETs are hidden by default. Tell creates from updates by path: `POST /v1/customers` creates,
+`POST /v1/customers/cus_...` updates.
 
 ## Exercises
 

@@ -16,7 +16,7 @@ run(async () => {
   });
   show('customer', customer, ['id', 'object', 'email', 'livemode', 'created', 'metadata']);
   // Every response carries the request ID; it's what Stripe support asks for, and
-  // you can look it up under Dashboard > Developers > Logs.
+  // you can look it up at https://dashboard.stripe.com/test/logs or in the Dashboard search bar.
   console.log('request id:', customer.lastResponse.requestId);
 
   heading('Retrieve');

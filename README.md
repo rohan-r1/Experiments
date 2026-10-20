@@ -46,4 +46,5 @@ npm test            # vitest (offline tests, from Lab 3)
   examples online don't type-check, the API version is usually why.
 - Everything the labs create is tagged `metadata.lab` (and `metadata.run`), so it can be
   found and cleaned up. Dashboard → Developers → "Delete all test data" resets everything.
-- To dig into any request, find its `requestId` under Dashboard → Developers → Logs.
+- To dig into any request, paste its `requestId` into the Dashboard search bar, or browse
+  https://dashboard.stripe.com/test/logs (Workbench → Logs; GET requests are hidden by default).
