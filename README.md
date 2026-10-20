@@ -16,9 +16,14 @@ order state change.
 | 5 | Connect | Connected accounts and onboarding (Account Links), capabilities & requirements, destination charges vs. separate charges & transfers, application fees, `on_behalf_of`, refunds with `reverse_transfer`, payouts, Connect webhooks | Scripts + server |
 | 6 | Capstone: Bazaar | Everything above in one app, plus a reconciliation job that compares the local ledger with Balance Transactions | Full app |
 
-Each lab has a README with the concepts, the scripts to run in order, and **exercises**:
-small changes that are yours to write. The scripts are the worked examples; the exercises
-are where the learning happens.
+The goal is to understand the API well enough to **direct an AI assistant and catch its
+mistakes**, not to write Stripe code from memory. So from Lab 2 on, each lab has:
+
+1. **Scripts to run**, with what to notice in their output.
+2. **Concept checks**: questions with hidden answers.
+3. **Spot the bug**: plausible code with the mistakes assistants really make.
+4. **Spec and review**: you specify a feature, Claude builds it, and you review it against
+   [`REVIEW-CHECKLIST.md`](REVIEW-CHECKLIST.md), which grows with each lab.
 
 ## Setup
 
